@@ -6,6 +6,7 @@
     <string name="lato">Lato</string>
     <string name="lora">Lora</string>
     <string name="raleway">Raleway</string>
+    <string name="submit">Read</string>
 
     <string name="andada_font">fonts/andada/Andada-Regular.otf</string>
     <string name="lato_font">fonts/lato/Lato-Regular.ttf</string>

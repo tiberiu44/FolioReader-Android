@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.folioreader.model.HighLight;
 import com.folioreader.model.HighlightImpl;
 import com.folioreader.model.locators.ReadLocator;
@@ -19,6 +21,8 @@ import com.folioreader.ui.base.OnSaveHighlight;
 import com.folioreader.ui.base.SaveReceivedHighlightTask;
 import com.folioreader.util.OnHighlightListener;
 import com.folioreader.util.ReadLocatorListener;
+import com.folioreader.util.TTSListener;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -51,6 +55,7 @@ public class FolioReader {
     private ReadLocatorListener readLocatorListener;
     private OnClosedListener onClosedListener;
     private ReadLocator readLocator;
+    private TTSListener ttsListener;
 
     @Nullable
     public Retrofit retrofit;
@@ -79,6 +84,14 @@ public class FolioReader {
         }
     };
 
+    private BroadcastReceiver ttsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ttsListener != null) {
+                ttsListener.onTTS();
+            }
+        }
+    };
     private BroadcastReceiver readLocatorReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -89,6 +102,10 @@ public class FolioReader {
                 readLocatorListener.saveReadLocator(readLocator);
         }
     };
+
+    public TTSListener getTtsListener() {
+        return ttsListener;
+    }
 
     private BroadcastReceiver closedReceiver = new BroadcastReceiver() {
         @Override
@@ -232,6 +249,11 @@ public class FolioReader {
         return singleton;
     }
 
+    public FolioReader setTTSListener(TTSListener ttsListener) {
+        this.ttsListener = ttsListener;
+        return singleton;
+    }
+
     public FolioReader setOnClosedListener(OnClosedListener onClosedListener) {
         this.onClosedListener = onClosedListener;
         return singleton;
@@ -272,6 +294,7 @@ public class FolioReader {
             singleton.onHighlightListener = null;
             singleton.readLocatorListener = null;
             singleton.onClosedListener = null;
+            singleton.ttsListener = null;
         }
     }
 
